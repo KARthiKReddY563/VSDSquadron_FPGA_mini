@@ -20,13 +20,14 @@ The Verilog module controls the behavior of an RGB LED with an internal oscillat
 
 - **Outputs:** 
   - led\_red, led\_blue, led\_green: Control signals for the RGB LED.
-  - testwire: A test signal for verification purposes.
+  - testwire: A test output that shows the state of bit 5 from the counter frequency_counter_i for debugging purposes.
+.
 - **Inputs:** 
   - hw\_clk: Primary clock input sourced from the onboard oscillator.
 
-**Internal Design Elements**
+### Internal Design Elements
 
-***Internal Oscillator (SB\_HFOSC)***
+ 1. Internal Oscillator (SB\_HFOSC)
 
 - This embedded component supplies an oscilation of system clock that dispenses with an external oscillator requirement.
 - The output frequency sets the performance of subsequent logic functions, so all LED timing conduct is regular and consistent.
