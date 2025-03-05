@@ -6,9 +6,9 @@
 To Understand and document the provided Verilog code, creating the necessary PCF file, and integrating the design with the VSDSquadron FPGA Mini Board using the provided [datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
 
 
-##Step 1: Analysis of the Verilog Implementation
+## Step 1: Analysis of the Verilog Implementation
 
-###Accessing the Source Code
+### Accessing the Source Code
 
 The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
 
