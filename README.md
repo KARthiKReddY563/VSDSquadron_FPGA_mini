@@ -11,7 +11,7 @@ To Understand and document the provided Verilog code, creating the necessary PCF
 ### Accessing the Source Code
 
 The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
-
+<details>
 **Architectural Overview**
 
 The Verilog module controls the behavior of an RGB LED with an internal oscillator as a clock source and a frequency counter for modulation. The design provides stable timing control and LED signal generation.
@@ -88,6 +88,7 @@ The output is connected to the int_osc wire, which is the internal clock signal 
 - `RGB0_CURRENT = "0b000001"`: Sets the red LED current.
 - `RGB1_CURRENT = "0b000001"`: Sets the green LED current.
 - `RGB2_CURRENT = "0b000001"`: Sets the blue LED current.
+- 
 **Purpose of the Module**
 
 The purpose of this Verilog module, named `top`, is to control an RGB LED system using an internal oscillator and a counter. It encapsulates the logic necessary for managing the intensity and color of the LEDs.
@@ -110,7 +111,7 @@ The purpose of this Verilog module, named `top`, is to control an RGB LED syste
 - The outputs of the module are the actual RGB LED connections (`led_red`, `led_green`, `led_blue`).
 - The RGB LEDs are enabled (`RGBLEDEN = 1'b1`), and their PWM signals are set to predefined values (`RGB0PWM = 1'b0`, `RGB1PWM = 1'b0`, `RGB2PWM = 1'b1`).
 
-
+</details>
 **Step 2: Pin Constraint File (PCF) Definition**
 
 **Accessing the PCF File**
