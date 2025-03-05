@@ -1,8 +1,10 @@
-**UART Loopback Implementation on VSDSquadron FPGA Mini**
+# VSDSquadron FM Research Internship by Ojasvi Shah
 
-**Overview**
 
-This project implements a UART loopback mechanism on the VSDSquadron FPGA Mini. The process includes analyzing the Verilog source code,setting up pin constraints, integrating with the FPGA board, and documenting the process.
+# Task 1: Understanding and Implementing the Verilog Code on FM
+## Objective: 
+To Understand and document the provided Verilog code, creating the necessary PCF file, and integrating the design with the VSDSquadron FPGA Mini Board using the provided [datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+
 
 **Step 1: Analysis of the Verilog Implementation**
 
