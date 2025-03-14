@@ -270,6 +270,8 @@ This implementation uses a simple but effective approach for UART transmission.
 
 
 </details>
+
+
 <details>
 <summary> Step 2: Design Documentation
 </summary>
@@ -284,9 +286,9 @@ This implementation uses a simple but effective approach for UART transmission.
 
 ![Image](https://github.com/user-attachments/assets/e46e9fde-0a17-4ef5-8079-75c2011de1ad)
 </details>
-<details>
-  </details>
 
+</details>
+<details>
 <summary>Step 3: FPGA Board Integration and Deploymen
 </summary>
 
