@@ -375,5 +375,124 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 </details>
 
+# Task 3: Developing a UART Transmitter Module
+## Objective: 
+Develop a UART transmitter module capable of sending serial data from the FPGA to an external device.
+
+<details>
+
+<summary> Step 1: Study the Existing Code</summary>
+
+The Verilog source code for the uart transmitter module can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+
+
+### Module Overview
+
+- The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
+
+- The entire module operates on the positive edge of the clock signal (posedge clk). Each state transition and bit transmission occurs at a clock edge, meaning the transmission rate is directly tied to the clock frequency.
+
+### Transmission Sequence
+
+1. #### Idle State
+  - During idle, the TX line is held high (logic 1), which is the standard UART idle state.
+  - The module waits for the senddata signal to be asserted.
+2. #### Start Bit Transmission
+  - When senddata is asserted, the module captures the input byte into buf_tx.
+  - It then transitions to STATE\_STARTTX where it pulls the TX line low (logic 0) for one clock cycle.
+  - >This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
+3. #### Data Bits Transmission
+  - In STATE\_TXING, the module transmits 8 data bits sequentially.
+  - It sends the least significant bit (LSB) first by outputting buf\_tx to the TX line.
+  - After each bit transmission, it right-shifts buf\_tx to position the next bit.
+  - The counter bits\_sent tracks how many bits have been transmitted.
+4. #### Stop Bit and Completion
+  - After all 8 data bits are sent, the TX line is pulled high again for the stop bit.
+  - The module then transitions to STATE\_TXDONE where it asserts the txdone signal.
+  - Finally, it returns to the idle state, ready for the next transmission.
+
+### Timing Considerations
+
+ Without a baud rate generator, each bit (start, data, and stop) is transmitted for exactly one clock cycle. This means:
+
+- If the clock is running at 9600 Hz, the UART will transmit at 9600 baud.
+- A complete 8N1 frame (1 start + 8 data + 1 stop) takes exactly 10 clock cycles.
+- The txdone signal is asserted for one clock cycle after transmission completes.
+
+### Data Flow 
+
+The data path involves:
+
+  -  Parallel data (txbyte) is loaded into buf_tx register.
+- buf_tx is right-shifted during transmission, exposing each bit sequentially.
+- The current bit is placed on the tx output through the txbit register.
+
+This implementation uses a simple but effective approach for UART transmission.
+</details>
+
+### Step 2: Design Documentation
+
+Block diagram detailing the UART transmitter module
+
+![Image](https://github.com/user-attachments/assets/5197a3fd-8bc5-4751-b6ff-52e2ebbbb8c7)
+![Image](https://github.com/user-attachments/assets/aaf19a22-3e30-430e-a8f4-eb0c393673be)
+
+ Circuit diagram illustrating the FPGA's UART TX pin connection to the receiving device
+ ![Image](https://github.com/user-attachments/assets/71ff7fa7-2c8d-49ef-af34-d36e5d2a8529)
+
+
+
+
+<details>
+
+<summary>Step 3: Implementation
+</summary>
+
+
+    
+**Hardware Setup**
+
+- Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+ for board details and pinout specifications.
+- Connect a USB-C interface between the board and the host computer.
+- Check FTDI connection in order to facilitate FPGA programming and debugging.
+- Ensure proper power supply and stable connections to avoid communication errors during flashing.
+
+**Compilation and Flashing Workflow**
+
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+
+
+
+**Execution Sequence**
+```
+lsusb # To check if Fpga is connected
+
+make clean # Clear out old compilation artifacts
+
+make build # Compile the Verilog design
+
+sudo make flash # Upload the synthesized bitstream to the FPGA
+
+```
+
+
+</details>
+<details>
+
+### Step 4: Testing and Verification
+
+<details>
+<summary>Steps of Testing and Verification</summary>
+
+1. Install, and then open PuTTy.
+2. Verify that the correct port is connected through serial communication (COM 7 in my case)
+3. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
+
+
+Task 3 is succesfully completed.
+</details>
+
+
 
 
