@@ -227,7 +227,7 @@ The module explains six ports:
 - Maps UART input directly to LED intensity
 
 ### Operation Analysis
-  - The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
+- The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
 
 - The entire module operates on the positive edge of the clock signal (posedge clk). Each state transition and bit transmission occurs at a clock edge, meaning the transmission rate is directly tied to the clock frequency.
 
@@ -271,8 +271,8 @@ This implementation uses a simple but effective approach for UART transmission.
 
 </details>
 <details>
-### Step 2: Design Documentation
-
+<summary>### Step 2: Design Documentation
+</summary>
 
 <summary>Block Diagram .</summary>
 
@@ -285,7 +285,8 @@ This implementation uses a simple but effective approach for UART transmission.
 ![image](https://github.com/user-attachments/assets/af77ea52-38ef-415a-a724-43abf43bc207)
 </details>
 <details>
-### Step 3: FPGA Board Integration and Deploymen
+<summary>### Step 3: FPGA Board Integration and Deploymen
+</summary>
 
 
     
@@ -318,7 +319,8 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 </details>
 <details>
-
+<summary>### Step 4: Testing and Verification
+</summary>
 ### Step 4: Testing and Verification
 
 
