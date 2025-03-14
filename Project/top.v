@@ -247,8 +247,8 @@ end
 assign uarttx = tx;
 
 // Assign values to LEDs
-assign led_red = (distance_cm > 100) ? 1'b1 : 1'b0;
-assign led_green = (distance_cm > 50 && distance_cm <= 100) ? 1'b1 : 1'b0;
+    assign led_red = (distance_cm > 250) ? 1'b1 : 1'b0;
+    assign led_green = (distance_cm > 50 && distance_cm <= 250) ? 1'b1 : 1'b0;
 assign led_blue = (distance_cm <= 50) ? 1'b1 : 1'b0;
 
 // Internal oscillator instantiation
