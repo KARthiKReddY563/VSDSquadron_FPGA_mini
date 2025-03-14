@@ -276,13 +276,13 @@ This implementation uses a simple but effective approach for UART transmission.
 
 <summary>Block Diagram .</summary>
 
-![image](https://github.com/user-attachments/assets/3447a27b-59fe-49e7-9c73-9a85f39c8a7d)
+![Image](https://github.com/user-attachments/assets/b110bef8-ae00-4a04-9219-bad1290bb2e1)
 </details>
 
 <details>
 <summary> Circuit Diagram showing Connections between the FPGA and any Peripheral Devices used.</summary>
 
-![image](https://github.com/user-attachments/assets/af77ea52-38ef-415a-a724-43abf43bc207)
+![Image](https://github.com/user-attachments/assets/e46e9fde-0a17-4ef5-8079-75c2011de1ad)
 </details>
 <details>
 <summary>Step 3: FPGA Board Integration and Deploymen
