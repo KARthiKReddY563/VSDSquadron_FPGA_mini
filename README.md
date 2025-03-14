@@ -342,7 +342,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 
     
-![image](https://github.com/user-attachments/assets/467c3207-0137-45a8-8a53-1e1103269d2b)
+![Image](https://github.com/user-attachments/assets/f6e605fb-d9e6-4b33-a143-d8fd8fa73177)
 
 3. To create a new send sequence:
 
@@ -365,10 +365,9 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 - The sent data will appear in the communication window with a [TX] prefix.
 
-![image](https://github.com/user-attachments/assets/47a7f864-2fa9-458e-9380-3b264b0f8904)
 
 6. In our case, we've created a loopback configuration by connecting the TX (transmit) pin directly to the RX (receive) pin. This means that any data we send out through the TX pin will be immediately received back on the RX pin, allowing us to verify that our transmission is working correctly by confirming we receive the exact same message that we sent.We can verify it in below image.
-
+![Image](https://github.com/user-attachments/assets/19f37337-557c-4a8c-9649-b1112d7adaf0)
 
 </details>
 
