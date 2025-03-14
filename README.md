@@ -429,18 +429,25 @@ The data path involves:
 
 This implementation uses a simple but effective approach for UART transmission.
 </details>
-
+<details></details>
 ### Step 2: Design Documentation
 
-Block diagram detailing the UART transmitter module
-
+<details>
+  <summary> Block diagram detailing the UART transmitter module
+</summary>
 ![Image](https://github.com/user-attachments/assets/5197a3fd-8bc5-4751-b6ff-52e2ebbbb8c7)
 ![Image](https://github.com/user-attachments/assets/aaf19a22-3e30-430e-a8f4-eb0c393673be)
+</details>
 
- Circuit diagram illustrating the FPGA's UART TX pin connection to the receiving device
+<details>
+  <summary>Circuit diagram illustrating the FPGA's UART TX pin connection to the receiving device
+</summary>
+ 
  ![Image](https://github.com/user-attachments/assets/71ff7fa7-2c8d-49ef-af34-d36e5d2a8529)
+</details>
 
 
+</details>
 
 
 <details>
@@ -478,15 +485,15 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 
 </details>
-<details>
 
-### Step 4: Testing and Verification
+
 
 <details>
-<summary>Steps of Testing and Verification</summary>
+<summary>Step 4: Testing and Verification
+</summary>
 
 1. Install, and then open PuTTy.
-2. Verify that the correct port is connected through serial communication (COM 7 in my case)
+2. Verify that the correct port is connected through serial communication (COM 9 in my case)
 3. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
 
 
