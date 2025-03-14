@@ -429,8 +429,11 @@ The data path involves:
 
 This implementation uses a simple but effective approach for UART transmission.
 </details>
-<details></details>
-### Step 2: Design Documentation
+
+<details>
+ <summary>Step 2: Design Documentation
+</summary>
+
 
 <details>
   <summary> Block diagram detailing the UART transmitter module
