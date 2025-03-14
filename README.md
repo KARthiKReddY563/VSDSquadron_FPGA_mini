@@ -187,4 +187,188 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 - An accurate pin mapping guarantees signal integrity and correct circuit behavior.
 
 
+# Task 2: Implementing a UART loopback mechanism
+## Objective:
+Implement a UART loopback mechanism where transmitted data is immediately received back, facilitating testing of UART functionality
+
+<details>
+
+### Step 1: Study the Existing Code
+The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+
+
+<summary>Analysis</summary>
+
+### Port Analysis:
+The module explains six ports:
+- Three **RGB LED outputs** (led_red, led_blue, led_green)
+- **UART transmit/receive pins** (uarttx, uartrx)
+- **System clock input** (hw_clk)
+
+### Internal Component Analysis
+1. **Internal Oscilliator** (SB_HFOSC)
+- Implements a high-frequency oscillator
+- Uses CLKHF_DIV = "0b10" for frequency division
+- Generates internal clock signal (int_osc)
+
+2. **Frequency Counter**
+- 28-bit counter (frequency_counter_i)
+- Increments on every positive edge of internal oscillator
+- Used for timing generation
+
+3. **UART Loopback**
+- Direct connection between transmit and receive pins
+- Echoes back any received UART data immediately
+
+4. **RGB LED Driver** (SB_RGBA_DRV)
+- Controls three RGB channels
+- Uses PWM (Pulse Width Modulation) for brightness control
+- Current settings configured for each channel
+- Maps UART input directly to LED intensity
+
+### Operation Analysis
+  - The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
+
+- The entire module operates on the positive edge of the clock signal (posedge clk). Each state transition and bit transmission occurs at a clock edge, meaning the transmission rate is directly tied to the clock frequency.
+
+### Transmission Sequence
+
+1. #### Idle State
+  - During idle, the TX line is held high (logic 1), which is the standard UART idle state.
+  - The module waits for the senddata signal to be asserted.
+1. #### Start Bit Transmission
+  - When senddata is asserted, the module captures the input byte into buf_tx.
+  - It then transitions to STATE\_STARTTX where it pulls the TX line low (logic 0) for one clock cycle.
+  - >This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
+1. #### Data Bits Transmission
+  - In STATE\_TXING, the module transmits 8 data bits sequentially.
+  - It sends the least significant bit (LSB) first by outputting buf\_tx to the TX line.
+  - After each bit transmission, it right-shifts buf\_tx to position the next bit.
+  - The counter bits\_sent tracks how many bits have been transmitted.
+1. #### Stop Bit and Completion
+  - After all 8 data bits are sent, the TX line is pulled high again for the stop bit.
+  - The module then transitions to STATE\_TXDONE where it asserts the txdone signal.
+    - Finally, it returns to the idle state, ready for the next transmission.
+
+### Timing Considerations
+
+ Without a baud rate generator, each bit (start, data, and stop) is transmitted for exactly one clock cycle. This means:
+
+- If the clock is running at 9600 Hz, the UART will transmit at 9600 baud.
+- A complete 8N1 frame (1 start + 8 data + 1 stop) takes exactly 10 clock cycles.
+- The txdone signal is asserted for one clock cycle after transmission completes.
+
+### Data Flow 
+
+The data path involves:
+
+  -  Parallel data (txbyte) is loaded into buf_tx register.
+- buf_tx is right-shifted during transmission, exposing each bit sequentially.
+- The current bit is placed on the tx output through the txbit register.
+
+This implementation uses a simple but effective approach for UART transmission.
+
+
+</details>
+<details>
+### Step 2: Design Documentation
+
+
+<summary>Block Diagram .</summary>
+
+![image](https://github.com/user-attachments/assets/3447a27b-59fe-49e7-9c73-9a85f39c8a7d)
+</details>
+
+<details>
+<summary> Circuit Diagram showing Connections between the FPGA and any Peripheral Devices used.</summary>
+
+![image](https://github.com/user-attachments/assets/af77ea52-38ef-415a-a724-43abf43bc207)
+</details>
+<details>
+### Step 3: FPGA Board Integration and Deploymen
+
+
+    
+**Hardware Setup**
+
+- Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+ for board details and pinout specifications.
+- Connect a USB-C interface between the board and the host computer.
+- Check FTDI connection in order to facilitate FPGA programming and debugging.
+- Ensure proper power supply and stable connections to avoid communication errors during flashing.
+
+**Compilation and Flashing Workflow**
+
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+
+
+
+**Execution Sequence**
+```
+lsusb # To check if Fpga is connected
+
+make clean # Clear out old compilation artifacts
+
+make build # Compile the Verilog design
+
+sudo make flash # Upload the synthesized bitstream to the FPGA
+
+```
+
+
+</details>
+<details>
+
+### Step 4: Testing and Verification
+
+
+    
+ 1. For the testing purpose we will use docklight software which is a simulation tool for serial communication protocols. It allows us to monitor the communication between two serial devices.It can be downladed from [here](https://docklight.de/downloads/).
+
+    
+2. After installation, open Docklight and select "Start with a blank project / blank script" to begin.
+
+ - Configure the correct communication port:
+
+  - Go to Tools > Project Settings
+
+ - In the Communication tab, select your COM port (COM7 in your case)
+
+- Verify the speed is set to 9600 bps (not the default 115200)
+
+- Ensure other settings are correct: 8 data bits, 1 stop bit, no parity, and no flow control
+
+
+    
+![image](https://github.com/user-attachments/assets/467c3207-0137-45a8-8a53-1e1103269d2b)
+
+3. To create a new send sequence:
+
+- Double-click on the last empty line in the Send Sequences table (the small blue box you mentioned)
+
+- The "Edit Send Sequence" dialog will appear
+
+4. In the dialog:
+
+- Enter a unique name for your sequence in the "Name" field
+
+- Select your preferred format (ASCII, HEX, Decimal, or Binary) using the "Edit Mode" radio buttons
+- Type your message in the "Sequence" field.Click "OK" to add the sequence to your list
+
+5.  To send the sequence:
+
+- Click the arrow button next to the sequence name in the Send Sequences list
+
+- Docklight will transmit your sequence through the configured COM port
+
+- The sent data will appear in the communication window with a [TX] prefix.
+
+![image](https://github.com/user-attachments/assets/47a7f864-2fa9-458e-9380-3b264b0f8904)
+
+5. In our case, we've created a loopback configuration by connecting the TX (transmit) pin directly to the RX (receive) pin. This means that any data we send out through the TX pin will be immediately received back on the RX pin, allowing us to verify that our transmission is working correctly by confirming we receive the exact same message that we sent.We can verify it in below image.
+
+
+</details>
+
+
 
