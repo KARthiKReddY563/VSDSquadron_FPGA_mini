@@ -193,11 +193,11 @@ Implement a UART loopback mechanism where transmitted data is immediately receiv
 
 <details>
 
-### Step 1: Study the Existing Code
 The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
 
 
-<summary>Analysis</summary>
+<summary> Step 1: Study the Existing Code
+</summary>
 
 ### Port Analysis:
 The module explains six ports:
@@ -271,7 +271,7 @@ This implementation uses a simple but effective approach for UART transmission.
 
 </details>
 <details>
-<summary>### Step 2: Design Documentation
+<summary> Step 2: Design Documentation
 </summary>
 
 <summary>Block Diagram .</summary>
@@ -285,7 +285,7 @@ This implementation uses a simple but effective approach for UART transmission.
 ![image](https://github.com/user-attachments/assets/af77ea52-38ef-415a-a724-43abf43bc207)
 </details>
 <details>
-<summary>### Step 3: FPGA Board Integration and Deploymen
+<summary>Step 3: FPGA Board Integration and Deploymen
 </summary>
 
 
@@ -321,7 +321,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <details>
 <summary>### Step 4: Testing and Verification
 </summary>
-### Step 4: Testing and Verification
+
 
 
     
