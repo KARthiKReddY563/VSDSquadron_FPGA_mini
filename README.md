@@ -273,7 +273,7 @@ This implementation uses a simple but effective approach for UART transmission.
 <details>
 <summary> Step 2: Design Documentation
 </summary>
-
+<details>
 <summary>Block Diagram .</summary>
 
 ![Image](https://github.com/user-attachments/assets/b110bef8-ae00-4a04-9219-bad1290bb2e1)
@@ -285,6 +285,8 @@ This implementation uses a simple but effective approach for UART transmission.
 ![Image](https://github.com/user-attachments/assets/e46e9fde-0a17-4ef5-8079-75c2011de1ad)
 </details>
 <details>
+  </details>
+
 <summary>Step 3: FPGA Board Integration and Deploymen
 </summary>
 
@@ -319,7 +321,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 </details>
 <details>
-<summary>### Step 4: Testing and Verification
+<summary>Step 4: Testing and Verification
 </summary>
 
 
