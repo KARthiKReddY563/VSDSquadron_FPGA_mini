@@ -6,12 +6,12 @@
 To Understand and document the provided Verilog code, creating the necessary PCF file, and integrating the design with the VSDSquadron FPGA Mini Board using the provided [datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
 
 
-## Step 1: Analysis of the Verilog Implementation
 
-### Accessing the Source Code
+<details>
+<summary> Step 1: Analysis of the Verilog Implementation</summary>
 
 The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
-<details>
+
 **Architectural Overview**
 
 The Verilog module controls the behavior of an RGB LED with an internal oscillator as a clock source and a frequency counter for modulation. The design provides stable timing control and LED signal generation.
@@ -112,9 +112,11 @@ The purpose of this Verilog module, named `top`, is to control an RGB LED syste
 - The RGB LEDs are enabled (`RGBLEDEN = 1'b1`), and their PWM signals are set to predefined values (`RGB0PWM = 1'b0`, `RGB1PWM = 1'b0`, `RGB2PWM = 1'b1`).
 
 </details>
-**Step 2: Pin Constraint File (PCF) Definition**
+Step 2: Pin Constraint File (PCF) Definition**
 
-**Accessing the PCF File**
+<details>
+  <summary>Step 2: Pin Constraint File (PCF) Definition</summary>
+  **Accessing the PCF File**
 
 The pin constraint file, which describes FPGA-to-board pin mappings, is here: [VSDSquadronFM.pcf](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/VSDSquadronFM.pcf)
 
@@ -128,11 +130,12 @@ The pin constraint file, which describes FPGA-to-board pin mappings, is here: [V
 |led\_green|41|Drives the green channel of the RGB LED via PWM signal, controlling its intensity.|
 |hw\_clk|20|Receives the hardware clock signal, serving as the primary timing reference for the FPGA's internal logic and operations.|
 |testwire|17|Configured for testing purposes.|
+</details>
 
 
 
-
-**Step 3: FPGA Board Integration and Deployment**
+<details>
+  <summary>Step 3: FPGA Board Integration and Deployment</summary>
 
 **Hardware Setup**
 
@@ -165,8 +168,11 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 - The RGB LED must display a given blinking pattern, verifying correct operational behavior.
 - The system should be able to respond to changes in the internal oscillator, to maintain synchronization with the counter logic.
 
-**Step 4: Final Documentation and Repository Organization**
+</details>
 
+<details>
+<summary>Step 4: Final Documentation and Repository Organization</summary>
+  
 **Functional Summary of the Verilog Implementation**
 
 - The code is designed to manage RGB LEDs using PWM signals for color control.The internal oscillator drives the counter, which can be used to dynamically adjust the PWM signals for more complex color patterns.The testwire provides a means to observe the internal oscillator's frequency indirectly.
@@ -187,13 +193,15 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 - An accurate pin mapping guarantees signal integrity and correct circuit behavior.
 
 
+  
+</details>
 # Task 2: Implementing a UART loopback mechanism
 ## Objective:
 Implement a UART loopback mechanism where transmitted data is immediately received back, facilitating testing of UART functionality
 
 <details>
 
-The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+The Verilog source code for the UART Loopback functionality is found in the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
 
 
 <summary> Step 1: Study the Existing Code
@@ -383,7 +391,7 @@ Develop a UART transmitter module capable of sending serial data from the FPGA t
 
 <summary> Step 1: Study the Existing Code</summary>
 
-The Verilog source code for the uart transmitter module can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+The Verilog source code for the UART Transmitter module can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
 
 
 ### Module Overview
@@ -496,12 +504,178 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 </summary>
 
 1. Install, and then open PuTTy.
-2. Verify that the correct port is connected through serial communication (COM 9 in my case)
-3. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
+2. 2. Select the serial option and verify if the Speed(baud rate) is 9600.
+3. Verify that the correct port is connected through serial communication (COM 9 in my case)
+4. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
 
 
 Task 3 is succesfully completed.
 </details>
+
+
+
+
+
+
+# Task 4: Implementing a UART Transmitter that Sends Data Based on Sensor Inputs
+## Objective:
+Implement a UART transmitter that sends data based on sensor inputs, enabling the FPGA to communicate real-time sensor data to an external device.
+
+
+
+<details>
+<summary> Step 1: Study the Existing Code</summary>
+  
+The Verilog source code for the Task 4 can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+Overview of the Block Diagram
+
+The diagram illustrates a complete sensor data acquisition and UART transmission system with the following components:
+
+1. **Sensor Data Path**:
+   1. Sensor → Sensor Interface → Data Processing → Data Buffer
+   2. This path handles the acquisition and initial processing of sensor data
+2. **FPGA Processing Path**:
+   1. FPGA → Baud Rate Generator
+   2. Provides timing control for UART transmission
+3. **Transmission Path**:
+   1. Data Buffer (Stores Sensor Data) → TX Shift Register → UART TX Logic → UART Output
+   2. Handles the actual UART transmission process
+4. **Control Logic** 
+   1. State Machine (connected to UART TX Logic)
+   2. Manages the transmission sequence
+
+Code Analysis: uart_tx_8n1 Module
+
+The provided uart_tx_8n1 module implements a basic 8N1 UART transmitter (8 data bits, No parity, 1 stop bit).
+
+**Key Components:**
+
+1. **Interface Signals**:
+   1. clk: Input clock (9600 Hz in the top module)
+   2. txbyte: 8-bit data to transmit
+   3. senddata: Trigger to start transmission
+   4. txdone: Output signal indicating transmission completion
+   5. tx: Serial UART output line
+2. **State Machine**:
+   1. STATE\_IDLE: Waiting for transmission request
+   2. STATE\_STARTTX: Sending start bit (logic low)
+   3. STATE\_TXING: Transmitting 8 data bits
+   4. STATE\_TXDONE: Sending stop bit and signaling completion
+3. **Internal Registers**:
+   1. state: Current state of the FSM
+   2. buf\_tx: Buffer holding the byte being transmitted
+   3. bits\_sent: Counter for transmitted bits
+   4. txbit: Current bit being transmitted
+   5. txdone: Transmission completion flag
+
+**Operation Flow:**
+
+1. **Idle State**:
+   1. TX line is held high
+   2. Waits for senddata signal
+2. **Start Bit**:
+   1. When senddata is asserted, transitions to STATE\_STARTTX
+   2. Outputs logic low (start bit)
+3. **Data Bits**:
+   1. Shifts out 8 data bits from buf\_tx LSB first
+   2. Increments bits\_sent counter
+4. **Stop Bit**:
+   1. After 8 bits, outputs logic high (stop bit)
+   2. Transitions to STATE\_TXDONE
+5. **Completion**:
+  1. Asserts txdone signal
+  2. Returns to STATE\_IDLE
+
+Top Module Analysis
+
+The top module integrates the UART transmitter with:
+
+1. **Clock Generation**:
+   1. Uses internal high-frequency oscillator (SB\_HFOSC)
+   2. Divides down to generate 9600 Hz clock for UART
+2. **UART Implementation**:
+   1. Instantiates uart\_tx\_8n1 module
+   2. Configured to repeatedly transmit ASCII character 'D'
+   1. Transmission triggered by bit 24 of a counter (creates periodic transmission)
+3. **LED Control**:
+   1. Uses SB\_RGBA\_DRV primitive for RGB LED control
+   2. LED states tied to UART RX input (visual feedback)
+
+
+</details>
+<details>
+<summary> Step 2: Design Documentation</summary>
+
+<details>
+<summary>Block diagram depicting the integration of the sensor module with the UART transmitter.</summary>
+
+
+
+![Image](https://github.com/user-attachments/assets/8ff5da4d-a1c4-454d-bd20-cdc99ebab02a)
+
+</details>
+<details>
+<summary> Circuit diagram showing connections between the FPGA, sensor, and the receiving device.</summary>
+
+
+
+![Image](https://github.com/user-attachments/assets/b0bfe8d6-d3c3-46b8-a4b9-f34df53333e5)
+
+</details>
+</details>
+
+<details>
+
+<summary>Step 3: Implementation
+</summary>
+
+
+    
+**Hardware Setup**
+
+- Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+ for board details and pinout specifications.
+- Connect a USB-C interface between the board and the host computer.
+- Check FTDI connection in order to facilitate FPGA programming and debugging.
+- Ensure proper power supply and stable connections to avoid communication errors during flashing.
+
+**Compilation and Flashing Workflow**
+
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+
+
+
+**Execution Sequence**
+```
+lsusb # To check if Fpga is connected
+
+make clean # Clear out old compilation artifacts
+
+make build # Compile the Verilog design
+
+sudo make flash # Upload the synthesized bitstream to the FPGA
+
+```
+
+
+</details>
+
+
+
+<details>
+<summary>Step 4: Testing and Verification
+</summary>
+
+1. Install, and then open PuTTy.
+2. Select the serial option and verify if the Speed(baud rate) is 9600.
+3. Verify that the correct port is connected through serial communication (COM 9 in my case)/
+4. Then, check that a series of "F"s are generated .
+
+
+Task 4 is succesfully completed.
+</details>
+
+
 
 
 
