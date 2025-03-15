@@ -112,7 +112,7 @@ The purpose of this Verilog module, named `top`, is to control an RGB LED syste
 - The RGB LEDs are enabled (`RGBLEDEN = 1'b1`), and their PWM signals are set to predefined values (`RGB0PWM = 1'b0`, `RGB1PWM = 1'b0`, `RGB2PWM = 1'b1`).
 
 </details>
-Step 2: Pin Constraint File (PCF) Definition**
+
 
 <details>
   <summary>Step 2: Pin Constraint File (PCF) Definition</summary>
@@ -191,11 +191,30 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 - Finalized FPGA pin constraints are cross-checked with respect to the specifications of the VSDSquadron FPGA Mini.
 - An accurate pin mapping guarantees signal integrity and correct circuit behavior.
-
-
-  
+<details>
+  <summary> Video demonstrating Task 1 (using 48MHz clock ) </summary>
+ https://github.com/user-attachments/assets/a4315a6a-78e7-427f-aa07-5c8046ae5cbc
 </details>
+<details>
+  <summary> Video demonstrating Task 1 (using 24MHz clock ) </summary>
+https://github.com/user-attachments/assets/8cf8d8d3-c649-4f4d-8463-348373fc8a6d
+</details>
+<details>
+  <summary> Video demonstrating Task 1 (using 12MHz clock ) </summary>
+
+https://github.com/user-attachments/assets/561cfde6-eb1f-48eb-835e-81fa00e67b34
+</details>
+<details>
+  <summary> Video demonstrating 1 (using 6MHz clock ) </summary>
+https://github.com/user-attachments/assets/1f5eb4e7-4915-4b81-8514-9d34924dedba
+</details>
+
+
+Task 1 is succesfully completed.
+</details>
+
 # Task 2: Implementing a UART loopback mechanism
+
 ## Objective:
 Implement a UART loopback mechanism where transmitted data is immediately received back, facilitating testing of UART functionality
 
@@ -297,7 +316,7 @@ This implementation uses a simple but effective approach for UART transmission.
 
 </details>
 <details>
-<summary>Step 3: FPGA Board Integration and Deploymen
+<summary>Step 3: Implementation
 </summary>
 
 
@@ -381,6 +400,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 6. In our case, we've created a loopback configuration by connecting the TX (transmit) pin directly to the RX (receive) pin. This means that any data we send out through the TX pin will be immediately received back on the RX pin, allowing us to verify that our transmission is working correctly by confirming we receive the exact same message that we sent.We can verify it in below image.
 ![Image](https://github.com/user-attachments/assets/19f37337-557c-4a8c-9649-b1112d7adaf0)
 
+Task 2 is succesfully completed.
 </details>
 
 # Task 3: Developing a UART Transmitter Module
@@ -505,9 +525,15 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 1. Install, and then open PuTTy.
 2. 2. Select the serial option and verify if the Speed(baud rate) is 9600.
-3. Verify that the correct port is connected through serial communication (COM 9 in my case)
-4. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
+      
+![Image](https://github.com/user-attachments/assets/8fa480d7-784c-4b57-9f7d-45a50e9067e8)
 
+3. Verify that the correct port is connected through serial communication (COM 9 in my case).
+4. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
+<details>
+  <summary> Video demonstrating Task 3 </summary>
+  https://github.com/user-attachments/assets/319096ec-c854-4c44-9c28-21ea4d327bb4
+</details>
 
 Task 3 is succesfully completed.
 </details>
@@ -668,9 +694,15 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 1. Install, and then open PuTTy.
 2. Select the serial option and verify if the Speed(baud rate) is 9600.
-3. Verify that the correct port is connected through serial communication (COM 9 in my case)/
-4. Then, check that a series of "F"s are generated .
+   
+![Image](https://github.com/user-attachments/assets/8fa480d7-784c-4b57-9f7d-45a50e9067e8)
 
+3. Verify that the correct port is connected through serial communication (COM 9 in my case).
+4. Then, check that a series of "F"s are generated .
+<details>
+  <summary> Video demonstrating Task 4 </summary>
+  https://github.com/user-attachments/assets/36b99375-a7e9-426f-a10a-41a6a04761f4
+</details>
 
 Task 4 is succesfully completed.
 </details>
