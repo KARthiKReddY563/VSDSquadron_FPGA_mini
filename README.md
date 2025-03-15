@@ -707,6 +707,126 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 Task 4 is succesfully completed.
 </details>
 
+# Task 5  Real-Time Sensor Data Acquisition and Transmission System
+
+## Objective
+
+Real-Time Sensor Data Acquisition and Transmission System: This theme focuses on developing systems that interface with various sensors to collect data, process it using the FPGA, and transmit the information to external devices through communication protocols like UART.​
+
+
+
+<details>
+<summary>Step 1 : Project Description</summary>
+
+This project implements an ultrasonic distance measurement system with UART output. It measures distance using an ultrasonic sensor (HC-SR04 or similar), converts the measurement to centimeters, and transmits the result to ESP8266(NodeMCU) via UART at 9600 baud. This project also provides visual feedback through RGB LEDs based on the measured distance.
+
+</details>
+<details>
+  
+
+<summary> Step 2: Define System Requirements</summary>
+
+
+**Hardware Components:**
+
+- VSDSquadron Fpga board.
+- HC-SR04 ultrasonic distance sensor
+- ESP8266 (NodeMCU) for wireless data transmission
+- USB cable.
+- Connecting wires and breadboard.
+
+**Software Tools:**
+
+- Iverilog.
+- Gtkwave.
+- Visual Studio code.
+- Arduino IDE for ESP8266 programming.
+- Putty(Serial monitoring tool).
+
+</details>
+<details>
+ <summary> Step 3: System Architecture</summary>
+<details>
+ <summary> Block Diagram </summary>
+![Image](https://github.com/user-attachments/assets/ac43e17e-b2a7-42bc-9c29-84b02d059f15) 
+</details>
+The system consists of four primary functional blocks:
+
+1. **Sensor Interface Module**
+   1. Generates 10μs trigger pulses for the HC-SR04
+   1. Measures echo pulse duration
+   1. Implements 250ms cooldown period between measurements.
+1. **Data Processing Module**
+   1. Converts echo time to distance in centimeters
+   1. Formats data for transmission
+   1. Implements signal conditioning if necessary
+1. **Communication Module**
+   1. UART transmitter (9600 baud rate)
+   1. Packet formation with start/stop bits.
+   1. Serial data transmission to ESP8266
+1. **Feedback and Display Module**
+   1. RGB LED driver for visual distance indication
+   1. Distance thresholds for color changes
+
+
+**Data Flow**
+
+1. HC-SR04 sensor receives trigger pulse from FPGA
+1. Echo pulse duration is measured by FPGA
+1. FPGA converts pulse duration to distance
+1. Distance data is formatted and transmitted via UART
+1. ESP8266 receives data for wireless transmission
+1. RGB LED provides visual distance indication
+
+</details>
+
+<details>
+<summary> Step 4: Project Implementation Plan</summary>
+
+**Phase 1: System Setup and Component Testing**
+
+- Configure FPGA development environment
+- Test HC-SR04 sensor functionality
+- Verify ESP8266 communication capabilities
+- Implement and test RGB LED driver
+
+**Phase 2: FPGA Module Development**
+
+- Develop ultrasonic sensor interface module
+  - Implement trigger pulse generation (10μs)
+  - Create echo pulse measurement system
+  - Add 250ms cooldown period between measurements
+
+**Phase 3: Communication System Implementation**
+
+- Develop UART transmitter module
+- Configure ESP8266 for data reception
+  
+
+**Phase 4: Integration and Testing (2 weeks)**
+
+- Combine all FPGA modules into complete system
+- Integrate ESP8266 with FPGA via UART
+- Implement RGB LED feedback based on distance thresholds
+- Conduct comprehensive system testing
+  - Verify measurement accuracy at various distances
+  - Test communication reliability
+  - Validate visual feedback functionality
+
+
+Expected Outcomes
+
+The completed system will provide:
+
+- Real-time distance measurements using the HC-SR04 ultrasonic sensor
+- Reliable UART data transmission to the ESP8266
+- Visual feedback through RGB LEDs based on measured distance.
+
+
+This project demonstrates the integration of sensor data acquisition with real-time processing and communication capabilities.
+
+</details>
+
 
 
 
