@@ -88,7 +88,7 @@ The output is connected to the int_osc wire, which is the internal clock signal 
 - `RGB0_CURRENT = "0b000001"`: Sets the red LED current.
 - `RGB1_CURRENT = "0b000001"`: Sets the green LED current.
 - `RGB2_CURRENT = "0b000001"`: Sets the blue LED current.
-- 
+  
 **Purpose of the Module**
 
 The purpose of this Verilog module, named `top`, is to control an RGB LED system using an internal oscillator and a counter. It encapsulates the logic necessary for managing the intensity and color of the LEDs.
@@ -228,8 +228,8 @@ Implement a UART loopback mechanism where transmitted data is immediately receiv
 
 <summary> Step 1: Study the Existing Code
 </summary>
- The Verilog source code for the UART Loopback functionality is found in the following repository: [Task 2]
-(https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task2/top.v).
+
+ The Verilog source code for the UART Loopback functionality is found in the following repository: [Task 2](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task2/top.v).
 
 ### Port Analysis:
 The module explains six ports:
@@ -539,7 +539,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <details>
   <summary> Video demonstrating Task 3 </summary>
   
-  https://github.com/user-attachments/assets/319096ec-c854-4c44-9c28-21ea4d327bb4
+ https://github.com/user-attachments/assets/60675e20-6911-40c9-9351-cba4d7d272a7
 </details>
 
 Task 3 is succesfully completed.
@@ -560,6 +560,8 @@ Implement a UART transmitter that sends data based on sensor inputs, enabling th
 <summary> Step 1: Study the Existing Code</summary>
   
 The Verilog source code for the Task 4 can be found  via the following repository: [Task 4](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task4/top.v).
+
+
 Overview of the Block Diagram
 
 The diagram illustrates a complete sensor data acquisition and UART transmission system with the following components:
@@ -709,7 +711,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <details>
   <summary> Video demonstrating Task 4 </summary>
   
-  https://github.com/user-attachments/assets/36b99375-a7e9-426f-a10a-41a6a04761f4
+https://github.com/user-attachments/assets/ad5c3fd9-f7f4-490b-a9a6-5d1dbd1042aa
 </details>
 
 Task 4 is succesfully completed.
@@ -978,15 +980,31 @@ In the below  image :
 <details>
 <summary> Testing with Serial Termianl</summary>
 
+1. **Hardware Setup**
 
-1. **Wiring**:
+- Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+ for board details and pinout specifications.
+- Connect a USB-C interface between the board and the host computer.
+- Check FTDI connection in order to facilitate FPGA programming and debugging.
+- Ensure proper power supply and stable connections to avoid communication errors during flashing.
+- Connect TRIG (Pin 4) → HC-SR04 TRIG
+- Connect ECHO (Pin 3)→ HC-SR04 ECHO.
+- Connect 5 V to sensor VCC, common GND.
+- Connect FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+**Compilation and Flashing Workflow**
 
-   - TRIG (Pin 4) → HC-SR04 TRIG
-   - ECHO (Pin 3)→ HC-SR04 ECHO.
-  
-   - 5 V to sensor VCC, common GND.
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
 
-   - FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+**Execution Sequence**
+```
+lsusb # To check if Fpga is connected
+
+make clean # Clear out old compilation artifacts
+
+make build # Compile the Verilog design
+
+sudo make flash # Upload the synthesized bitstream to the FPGA
+```
 
 2. **Terminal**:
 
@@ -1009,14 +1027,34 @@ In the below  image :
 <details>
 <summary> Testing with ESP8266</summary>
 
+Change the `set_io uarttx` from  14 to  10 to send the signals via pin 10 in the [VSDSquadronFM.pcf](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
 
-1. **Wiring**:
+1. **Hardware Setup**
 
-   - TRIG (Pin 4) → HC-SR04 TRIG
-   - ECHO (Pin 3)→ HC-SR04 ECHO.
-   - 5 V to sensor VCC, common GND.
-   - FPGA’s UARTTX (Pin 10) → Esp8266 RX.
+- Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
+ for board details and pinout specifications.
+- Connect a USB-C interface between the board and the host computer.
+- Check FTDI connection in order to facilitate FPGA programming and debugging.
+- Ensure proper power supply and stable connections to avoid communication errors during flashing.
+- Connect TRIG (Pin 4) → HC-SR04 TRIG
+- Connect ECHO (Pin 3)→ HC-SR04 ECHO.
+- Connect 5 V to sensor VCC, common GND.
+- Connect FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+**Compilation and Flashing Workflow**
 
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
+
+**Execution Sequence**
+```
+lsusb # To check if Fpga is connected
+
+make clean # Clear out old compilation artifacts
+
+make build # Compile the Verilog design
+
+sudo make flash # Upload the synthesized bitstream to the FPGA
+```
+- Upload the [esp9266_rx.c](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/esp8266_rx.c) to the ESP8266.
 2. **Terminal**:
 
    - Open putty and select serial option.
@@ -1045,7 +1083,7 @@ In the below  image :
 <summary> Video Demonstration (Termianl) 
 </summary>
   
-https://github.com/user-attachments/assets/c79813da-5e27-4aaa-a0a3-19ae8d47f22e
+https://github.com/user-attachments/assets/1f4dcc04-079d-4188-898a-41927fe4b1a6
 </details>
 <details>
 
@@ -1053,7 +1091,7 @@ https://github.com/user-attachments/assets/c79813da-5e27-4aaa-a0a3-19ae8d47f22e
 <summary> Video Demonstration (ESP8266)  
 </summary>
 
-https://github.com/user-attachments/assets/35bee763-0393-4617-b1fd-a0e445849243
+https://github.com/user-attachments/assets/8b9ddb23-0b96-4498-a1b3-6e93c07f0cc5
 </details>
 </details>
 
