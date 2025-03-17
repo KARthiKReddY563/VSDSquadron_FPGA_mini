@@ -827,6 +827,228 @@ This project demonstrates the integration of sensor data acquisition with real-t
 
 </details>
 
+# Task 6 Implementation
+
+## Objective
+
+Execute the project plan by developing, testing, and validating the system.​
+
+
+
+
+<details>
+<summary>Step 1 : Developing FPGA Modules</summary>
+
+
+The project is implemented using several interconnected Verilog modules, each handling specific functionality. Here's a detailed explanation of each module:
+
+#### Ultrasonic Sensor Interface
+
+The `ultrasonic` module manages the HC-SR04 ultrasonic distance sensor interface:
+
+- **Parameters**:
+  - `TRIGGER_CYCLES`: Controls the trigger pulse duration (set to 60 cycles)
+  - `MAX_ECHO_CYCLES`: Prevents system hanging if echo never returns (24-bit max value)
+  - `COOLDOWN_CYCLES`: Ensures proper timing between measurements (12,000 cycles or 250ms at 12MHz)
+- **Functionality**: Implements a 4-state FSM that:
+  - Initializes counters in idle state
+  - Generates a trigger pulse to the sensor
+  - Measures the echo pulse width by counting clock cycles
+  - Enforces a cooldown period before starting the next measurement
+
+- The module outputs pulse\_width, which represents the echo duration in clock cycles1.
+
+#### Distance Calculation
+
+The `distance_calc` module converts echo pulse duration to distance:
+
+- **Parameters**:
+  - `CLK_PER_CM`: Calibration constant (348 clock cycles per centimeter)
+- **Functionality**: Divides the echo pulse width by the calibration constant to calculate distance in centimeters1.
+
+#### BCD Converter
+
+The `bcd_converter` module converts binary distance values to decimal digits:
+
+- **Inputs**: 16-bit binary distance value
+- **Outputs**: Three 4-bit BCD values for hundreds, tens, and units digits
+- **Functionality**: Performs integer division and modulo operations to extract individual decimal digits from the binary distance value1.
+
+#### UART Transmission
+
+The `uart_tx_8n1` module (included but not shown in detail) handles serial communication:
+
+- **Functionality**: Transmits 8-bit data with no parity and 1 stop bit over UART protocol
+
+Top Module Integration
+
+The top module integrates all components:
+
+- **Clock Generation**: Uses the internal oscillator (SB\_HFOSC) configured to generate the system clock
+- **Measurement System**: Instantiates the ultrasonic sensor interface and distance calculation modules
+- **Data Processing**: Uses the BCD converter to prepare distance values for transmission
+- **UART Control**: Implements a 5-state FSM to transmit distance readings serially:
+  - Waits for 1 second between transmissions
+  - Sends hundreds digit
+  - Sends tens digit
+  - Sends units digit
+  - Sends newline character
+- **LED Feedback**: Uses the RGB LED to provide visual distance feedback:
+  - Red LED: Distance ≤ 50cm
+  - Green LED: Distance between 50cm and 100cm
+  - Blue LED: Distance > 100cm1
+
+The system continuously measures distance, converts it to human-readable format, transmits it via UART, and provides visual feedback through the RGB LED.
+
+
+
+</details>
+<details>
+  
+
+<summary> Step 2: Simulation </summary>
+
+I have used Icarus Verilog + Gtkwave to simulate the modules but if you have any other tools like Xilinx vivado/ISE, modelsim etc. you can use them.
+Here is the installation for [Icarus verilog in windows.](https://www.youtube.com/watch?v=FqIhFxf9kFM)
+
+
+#### Simulation Results
+
+- The GTKWave simulation shows the UART transmission of distance data. 
+- The distance_cm[15:0] signal shows a value of 0000, representing 0 centimeters. 
+-  The system is transmitting this value over UART, where we can see tx_data[7:0] carrying the ASCII value "30" (hexadecimal representation of ASCII character '0'). 
+- The UART transmission can be observed on the uarttx signal, which shows the serial bit pattern for transmitting the ASCII character '0' followed later by "0A" (the ASCII newline character).
+-  The bits_sent[3:0] counter shows the progression of bits being transmitted for each character.
+
+![Image](https://github.com/user-attachments/assets/f90a119d-a3a5-4deb-a575-b2c90256973a)
+
+In the below  image :
+
+- The distance_cm[15:0] value has changed to "00EA" (234 centimeters)
+
+- The system is transmitting the digits sequentially:
+
+    - "32" (ASCII for '2')
+
+    - "33" (ASCII for '3')
+
+    - "34" (ASCII for '4')
+
+    - "0A" (newline)
+
+- Beginning to transmit "32" again for the next cycle.
+
+- The uarttx signal shows the serial transmission of each character.
+
+- The bits_sent[3:0] counter cycles through 0-9 for each character transmitted.
+
+![Image](https://github.com/user-attachments/assets/3d81bdd8-133e-4b2c-a298-34ba999ea98c)
+
+- In the below image :
+
+- The distance_cm[15:0] value has increased to "0190" (400 in decimal)
+
+- The tx_data[7:0] signal shows the transmission sequence:
+
+    - "34" (ASCII for '4')
+
+    - "30" (ASCII for '0')
+
+    - "0A" (newline)
+
+
+- The uarttx signal continues to show the serial bit patterns
+
+- The bits_sent[3:0] counter maintains its pattern of cycling through 0-9 for each character.
+
+![Image](https://github.com/user-attachments/assets/9ac664f0-1cd9-48e9-be51-947b6191ff9e)
+
+</details>
+
+<details>
+ <summary> Step 3: Testing with Hardware</summary>
+<details>
+<summary> Testing with Serial Termianl</summary>
+
+
+1. **Wiring**:
+
+   - TRIG (Pin 4) → HC-SR04 TRIG
+   - ECHO (Pin 3)→ HC-SR04 ECHO.
+  
+   - 5 V to sensor VCC, common GND.
+
+   - FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+
+2. **Terminal**:
+
+   - Open putty and select serial option.
+   - Verify the speed (baud rate) is 9600.
+   - Verify that the correct port is connected through serial communication (COM 9 in my case).
+
+3. **Measuring Distance**:
+
+   - Place an object ~10 cm away from the sensor.
+
+   - Terminal should display a reading around “0010” .
+
+   - Move the object closer or farther to see changing values.
+
+***
+
+</details>
+
+<details>
+<summary> Testing with ESP8266</summary>
+
+
+1. **Wiring**:
+
+   - TRIG (Pin 4) → HC-SR04 TRIG
+   - ECHO (Pin 3)→ HC-SR04 ECHO.
+   - 5 V to sensor VCC, common GND.
+   - FPGA’s UARTTX (Pin 10) → Esp8266 RX.
+
+2. **Terminal**:
+
+   - Open putty and select serial option.
+   - Verify the speed (baud rate) is 9600.
+   - Verify that the correct port is connected through serial communication (COM 10 in my case).
+   - We can also check in the Serial Moniter window of Arduino ide.
+   
+3. **Measuring Distance**:
+
+   - Place an object ~10 cm away from the sensor.
+
+   - Terminal should display a reading around “Distance: 10 cm”.
+
+   - Move the object closer or farther to see changing values.
+
+***
+</details>
+</details>
+
+<details>
+
+<summary> Step 4: Verification 
+</summary>
+<details>
+
+<summary> Video Demonstration (Termianl) 
+</summary>
+  
+https://github.com/user-attachments/assets/c79813da-5e27-4aaa-a0a3-19ae8d47f22e
+</details>
+<details>
+
+
+<summary> Video Demonstration (ESP8266)  
+</summary>
+
+https://github.com/user-attachments/assets/35bee763-0393-4617-b1fd-a0e445849243
+</details>
+</details>
+
 
 
 
