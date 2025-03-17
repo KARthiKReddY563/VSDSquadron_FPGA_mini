@@ -10,7 +10,7 @@ To Understand and document the provided Verilog code, creating the necessary PCF
 <details>
 <summary> Step 1: Analysis of the Verilog Implementation</summary>
 
-The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [Task 1](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/tree/main/Task1).
 
 **Architectural Overview**
 
@@ -120,7 +120,6 @@ The purpose of this Verilog module, named `top`, is to control an RGB LED syste
 
 The pin constraint file, which describes FPGA-to-board pin mappings, is here: [VSDSquadronFM.pcf](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/VSDSquadronFM.pcf)
 
-
 **Pin Mapping and Hardware Correlation**
 
 |**Signal**|**FPGA Pin**|**Function**|
@@ -147,7 +146,7 @@ The pin constraint file, which describes FPGA-to-board pin mappings, is here: [V
 
 **Compilation and Flashing Workflow**
 
-A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task1/Makefile).
 
 
 
@@ -191,22 +190,27 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 - Finalized FPGA pin constraints are cross-checked with respect to the specifications of the VSDSquadron FPGA Mini.
 - An accurate pin mapping guarantees signal integrity and correct circuit behavior.
+
+ 
 <details>
   <summary> Video demonstrating Task 1 (using 48MHz clock ) </summary>
- https://github.com/user-attachments/assets/a4315a6a-78e7-427f-aa07-5c8046ae5cbc
+  
+https://github.com/user-attachments/assets/95510870-3ad2-4bbc-b6f8-2143b636e00c
 </details>
 <details>
   <summary> Video demonstrating Task 1 (using 24MHz clock ) </summary>
-https://github.com/user-attachments/assets/8cf8d8d3-c649-4f4d-8463-348373fc8a6d
+  
+https://github.com/user-attachments/assets/c42ad4e5-1598-4da6-9159-4bd9a65f42af
 </details>
 <details>
   <summary> Video demonstrating Task 1 (using 12MHz clock ) </summary>
 
-https://github.com/user-attachments/assets/561cfde6-eb1f-48eb-835e-81fa00e67b34
+https://github.com/user-attachments/assets/deaffc83-271a-4d2d-99e6-365eed995d21
 </details>
 <details>
   <summary> Video demonstrating 1 (using 6MHz clock ) </summary>
-https://github.com/user-attachments/assets/1f5eb4e7-4915-4b81-8514-9d34924dedba
+  
+https://github.com/user-attachments/assets/195c507b-8f67-46b6-905c-bef2a5c8d349
 </details>
 
 
@@ -220,11 +224,12 @@ Implement a UART loopback mechanism where transmitted data is immediately receiv
 
 <details>
 
-The Verilog source code for the UART Loopback functionality is found in the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
 
 
 <summary> Step 1: Study the Existing Code
 </summary>
+ The Verilog source code for the UART Loopback functionality is found in the following repository: [Task 2]
+(https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task2/top.v).
 
 ### Port Analysis:
 The module explains six ports:
@@ -331,7 +336,7 @@ This implementation uses a simple but effective approach for UART transmission.
 
 **Compilation and Flashing Workflow**
 
-A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task2/Makefile)
 
 
 
@@ -411,7 +416,7 @@ Develop a UART transmitter module capable of sending serial data from the FPGA t
 
 <summary> Step 1: Study the Existing Code</summary>
 
-The Verilog source code for the UART Transmitter module can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+The Verilog source code for the UART Transmitter module can be found  via the following repository: [Task 3](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task3/top.v).
 
 
 ### Module Overview
@@ -466,6 +471,7 @@ This implementation uses a simple but effective approach for UART transmission.
 <details>
   <summary> Block diagram detailing the UART transmitter module
 </summary>
+  
 ![Image](https://github.com/user-attachments/assets/5197a3fd-8bc5-4751-b6ff-52e2ebbbb8c7)
 ![Image](https://github.com/user-attachments/assets/aaf19a22-3e30-430e-a8f4-eb0c393673be)
 </details>
@@ -498,7 +504,7 @@ This implementation uses a simple but effective approach for UART transmission.
 
 **Compilation and Flashing Workflow**
 
-A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task3/Makefile).
 
 
 
@@ -532,6 +538,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 4. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
 <details>
   <summary> Video demonstrating Task 3 </summary>
+  
   https://github.com/user-attachments/assets/319096ec-c854-4c44-9c28-21ea4d327bb4
 </details>
 
@@ -552,7 +559,7 @@ Implement a UART transmitter that sends data based on sensor inputs, enabling th
 <details>
 <summary> Step 1: Study the Existing Code</summary>
   
-The Verilog source code for the Task 4 can be found  via the following repository: [VSDSquadron_FM Verilog Code](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/top.v)
+The Verilog source code for the Task 4 can be found  via the following repository: [Task 4](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task4/top.v).
 Overview of the Block Diagram
 
 The diagram illustrates a complete sensor data acquisition and UART transmission system with the following components:
@@ -667,7 +674,7 @@ The top module integrates the UART transmitter with:
 
 **Compilation and Flashing Workflow**
 
-A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/Makefile)
+A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task4/Makefile).
 
 
 
@@ -701,6 +708,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 4. Then, check that a series of "F"s are generated .
 <details>
   <summary> Video demonstrating Task 4 </summary>
+  
   https://github.com/user-attachments/assets/36b99375-a7e9-426f-a10a-41a6a04761f4
 </details>
 
