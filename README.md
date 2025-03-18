@@ -9,8 +9,10 @@ To Understand and document the provided Verilog code, creating the necessary PCF
 
 <details>
 <summary> Step 1: Analysis of the Verilog Implementation</summary>
-
+<br>
+  
 The Verilog source code controlling  the RGB LED functionality is accessible via the following repository: [Task 1](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/tree/main/Task1).
+
 
 **Architectural Overview**
 
@@ -33,21 +35,22 @@ The Verilog module controls the behavior of an RGB LED with an internal oscillat
 
 - This embedded component supplies an oscilation of system clock that dispenses with an external oscillator requirement.
 - The output frequency sets the performance of subsequent logic functions, so all LED timing conduct is regular and consistent.
+  
 `SB_HFOSC`:
 This is a Verilog module that generates a high-frequency oscillator. It is commonly used in Lattice FPGAs (like the iCE40 series).
 It has configurable parameters to control things like the division factor of the output frequency.
 
 `CLKHF_DIV ("0b10")`:
-`CLKHF_DIV` is a parameter that sets the clock divider for the oscillator. The value `"0b10"` corresponds to a divider setting of 4, which means the output frequency will be 12 MHz if the nominal oscillator frequency is 48 MHz15
+`CLKHF_DIV` is a parameter that sets the clock divider for the oscillator. The value `"0b10"` corresponds to a divider setting of 4, which means the output frequency will be 12 MHz if the nominal oscillator frequency is 48 MHz.
 Common settings for CLKHF_DIV:
 
-`"0b00"` for 48 MHz
+- `"0b00"` for 48 MHz.
 
-`"0b01"` for 24 MHz
+- `"0b01"` for 24 MHz.
 
-`"0b10"` for 12 MHz
+- `"0b10"` for 12 MHz.
 
-`"0b11"` for 6 MHz
+- `"0b11"` for 6 MHz.
 
 *Control Signals*:
 
@@ -116,6 +119,9 @@ The purpose of this Verilog module, named `top`, is to control an RGB LED syste
 
 <details>
   <summary>Step 2: Pin Constraint File (PCF) Definition</summary>
+
+  <br>
+  
   **Accessing the PCF File**
 
 The pin constraint file, which describes FPGA-to-board pin mappings, is here: [VSDSquadronFM.pcf](https://github.com/thesourcerer8/VSDSquadron_FM/blob/main/led_blue/VSDSquadronFM.pcf)
@@ -135,7 +141,8 @@ The pin constraint file, which describes FPGA-to-board pin mappings, is here: [V
 
 <details>
   <summary>Step 3: FPGA Board Integration and Deployment</summary>
-
+<br>
+  
 **Hardware Setup**
 
 - Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
@@ -171,6 +178,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 <details>
 <summary>Step 4: Final Documentation and Repository Organization</summary>
+<br>
   
 **Functional Summary of the Verilog Implementation**
 
@@ -229,22 +237,24 @@ Implement a UART loopback mechanism where transmitted data is immediately receiv
 <summary> Step 1: Study the Existing Code
 </summary>
 
+<br>
+
  The Verilog source code for the UART Loopback functionality is found in the following repository: [Task 2](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task2/top.v).
 
 ### Port Analysis:
 The module explains six ports:
-- Three **RGB LED outputs** (led_red, led_blue, led_green)
-- **UART transmit/receive pins** (uarttx, uartrx)
-- **System clock input** (hw_clk)
+- Three **RGB LED outputs** ( `led_red`, `led_blue`, `led_green`)
+- **UART transmit/receive pins** (`uarttx`, `uartrx`)
+- **System clock input** (`hw_clk`)
 
 ### Internal Component Analysis
-1. **Internal Oscilliator** (SB_HFOSC)
+1. **Internal Oscilliator** (`SB_HFOSC`)
 - Implements a high-frequency oscillator
 - Uses CLKHF_DIV = "0b10" for frequency division
-- Generates internal clock signal (int_osc)
+- Generates internal clock signal (`int_osc`)
 
 2. **Frequency Counter**
-- 28-bit counter (frequency_counter_i)
+- 28-bit counter (`frequency_counter_i`)
 - Increments on every positive edge of internal oscillator
 - Used for timing generation
 
@@ -252,35 +262,35 @@ The module explains six ports:
 - Direct connection between transmit and receive pins
 - Echoes back any received UART data immediately
 
-4. **RGB LED Driver** (SB_RGBA_DRV)
+4. **RGB LED Driver** (`SB_RGBA_DRV`)
 - Controls three RGB channels
 - Uses PWM (Pulse Width Modulation) for brightness control
 - Current settings configured for each channel
 - Maps UART input directly to LED intensity
 
 ### Operation Analysis
-- The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
+- The `uart_tx_8n1` module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
 
 - The entire module operates on the positive edge of the clock signal (posedge clk). Each state transition and bit transmission occurs at a clock edge, meaning the transmission rate is directly tied to the clock frequency.
 
 ### Transmission Sequence
 
 1. #### Idle State
-  - During idle, the TX line is held high (logic 1), which is the standard UART idle state.
-  - The module waits for the senddata signal to be asserted.
-1. #### Start Bit Transmission
-  - When senddata is asserted, the module captures the input byte into buf_tx.
-  - It then transitions to STATE\_STARTTX where it pulls the TX line low (logic 0) for one clock cycle.
-  - >This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
-1. #### Data Bits Transmission
-  - In STATE\_TXING, the module transmits 8 data bits sequentially.
-  - It sends the least significant bit (LSB) first by outputting buf\_tx to the TX line.
-  - After each bit transmission, it right-shifts buf\_tx to position the next bit.
-  - The counter bits\_sent tracks how many bits have been transmitted.
-1. #### Stop Bit and Completion
-  - After all 8 data bits are sent, the TX line is pulled high again for the stop bit.
-  - The module then transitions to STATE\_TXDONE where it asserts the txdone signal.
-    - Finally, it returns to the idle state, ready for the next transmission.
+  - During idle, the `TX` line is held high (logic 1), which is the standard UART idle state.
+  - The module waits for the `senddata` signal to be asserted.
+2. #### Start Bit Transmission
+  - When `senddata` is asserted, the module captures the input byte into `buf_tx`.
+  - It then transitions to  `STATE_STARTTX` where it pulls the `TX` line low (logic 0) for one clock cycle.
+  - This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
+3. #### Data Bits Transmission
+  - In `STATE_TXING`, the module transmits 8 data bits sequentially.
+  - It sends the least significant bit (LSB) first by outputting `buf_tx` to the `TX` line.
+  - After each bit transmission, it right-shifts `buf_tx` to position the next bit.
+  - The counter `bits_sent` tracks how many bits have been transmitted.
+4. #### Stop Bit and Completion
+  - After all 8 data bits are sent, the `TX` line is pulled high again for the stop bit.
+  - The module then transitions to `STATE_TXDONE` where it asserts the `txdone` signal.
+  - Finally, it returns to the idle state, ready for the next transmission.
 
 ### Timing Considerations
 
@@ -294,9 +304,9 @@ The module explains six ports:
 
 The data path involves:
 
-  -  Parallel data (txbyte) is loaded into buf_tx register.
-- buf_tx is right-shifted during transmission, exposing each bit sequentially.
-- The current bit is placed on the tx output through the txbit register.
+-  Parallel data (txbyte) is loaded into `buf_tx` register.
+- `buf_tx` is right-shifted during transmission, exposing each bit sequentially.
+- The current bit is placed on the `tx` output through the txbit register.
 
 This implementation uses a simple but effective approach for UART transmission.
 
@@ -307,12 +317,14 @@ This implementation uses a simple but effective approach for UART transmission.
 <details>
 <summary> Step 2: Design Documentation
 </summary>
+  <br>
+  
 <details>
 <summary>Block Diagram .</summary>
 
 ![Image](https://github.com/user-attachments/assets/b110bef8-ae00-4a04-9219-bad1290bb2e1)
 </details>
-
+<br>
 <details>
 <summary> Circuit Diagram showing Connections between the FPGA and any Peripheral Devices used.</summary>
 
@@ -320,11 +332,13 @@ This implementation uses a simple but effective approach for UART transmission.
 </details>
 
 </details>
+
+
 <details>
 <summary>Step 3: Implementation
 </summary>
 
-
+  <br>
     
 **Hardware Setup**
 
@@ -358,8 +372,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <summary>Step 4: Testing and Verification
 </summary>
 
-
-
+<br>
     
  1. For the testing purpose we will use docklight software which is a simulation tool for serial communication protocols. It allows us to monitor the communication between two serial devices.It can be downladed from [here](https://docklight.de/downloads/).
 
@@ -368,13 +381,13 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
  - Configure the correct communication port:
 
-  - Go to Tools > Project Settings
+  - Go to Tools > Project Settings.
 
- - In the Communication tab, select your COM port (COM7 in your case)
+ - In the Communication tab, select your COM port (COM9 in my case).
 
-- Verify the speed is set to 9600 bps (not the default 115200)
+- Verify the speed is set to 9600 bps (not the default 115200).
 
-- Ensure other settings are correct: 8 data bits, 1 stop bit, no parity, and no flow control
+- Ensure other settings are correct: 8 data bits, 1 stop bit, no parity, and no flow control.
 
 
     
@@ -382,27 +395,28 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 3. To create a new send sequence:
 
-- Double-click on the last empty line in the Send Sequences table (the small blue box you mentioned)
+- Double-click on the last empty line in the Send Sequences table.
 
-- The "Edit Send Sequence" dialog will appear
+- The "Edit Send Sequence" dialog will appear.
 
 4. In the dialog:
 
-- Enter a unique name for your sequence in the "Name" field
+- Enter a unique name for your sequence in the "Name" field.
 
 - Select your preferred format (ASCII, HEX, Decimal, or Binary) using the "Edit Mode" radio buttons
-- Type your message in the "Sequence" field.Click "OK" to add the sequence to your list
+- Type your message in the "Sequence" field.Click "OK" to add the sequence to your list.
 
 5.  To send the sequence:
 
-- Click the arrow button next to the sequence name in the Send Sequences list
+- Click the arrow button next to the sequence name in the Send Sequences list.
 
-- Docklight will transmit your sequence through the configured COM port
+- Docklight will transmit your sequence through the configured COM port.
 
 - The sent data will appear in the communication window with a [TX] prefix.
 
 
 6. In our case, we've created a loopback configuration by connecting the TX (transmit) pin directly to the RX (receive) pin. This means that any data we send out through the TX pin will be immediately received back on the RX pin, allowing us to verify that our transmission is working correctly by confirming we receive the exact same message that we sent.We can verify it in below image.
+   <br>
 ![Image](https://github.com/user-attachments/assets/19f37337-557c-4a8c-9649-b1112d7adaf0)
 
 Task 2 is succesfully completed.
@@ -416,32 +430,34 @@ Develop a UART transmitter module capable of sending serial data from the FPGA t
 
 <summary> Step 1: Study the Existing Code</summary>
 
+  <br>
+  
 The Verilog source code for the UART Transmitter module can be found  via the following repository: [Task 3](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task3/top.v).
 
 
 ### Module Overview
 
-- The UART TX 8N1 module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
+- The `uart_tx_8n1` module operates as a serial transmitter that converts parallel data into a serial bitstream following the 8N1 UART protocol. Let's analyze its operation in detail:
 
 - The entire module operates on the positive edge of the clock signal (posedge clk). Each state transition and bit transmission occurs at a clock edge, meaning the transmission rate is directly tied to the clock frequency.
 
 ### Transmission Sequence
 
 1. #### Idle State
-  - During idle, the TX line is held high (logic 1), which is the standard UART idle state.
-  - The module waits for the senddata signal to be asserted.
+  - During idle, the `TX` line is held high (logic 1), which is the standard UART idle state.
+  - The module waits for the `senddata` signal to be asserted.
 2. #### Start Bit Transmission
-  - When senddata is asserted, the module captures the input byte into buf_tx.
-  - It then transitions to STATE\_STARTTX where it pulls the TX line low (logic 0) for one clock cycle.
-  - >This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
+  - When `senddata` is asserted, the module captures the input byte into `buf_tx`.
+  - It then transitions to  `STATE_STARTTX` where it pulls the `TX` line low (logic 0) for one clock cycle.
+  - This low signal serves as the start bit, signaling to the receiver that data transmission is beginning.
 3. #### Data Bits Transmission
-  - In STATE\_TXING, the module transmits 8 data bits sequentially.
-  - It sends the least significant bit (LSB) first by outputting buf\_tx to the TX line.
-  - After each bit transmission, it right-shifts buf\_tx to position the next bit.
-  - The counter bits\_sent tracks how many bits have been transmitted.
+  - In `STATE_TXING`, the module transmits 8 data bits sequentially.
+  - It sends the least significant bit (LSB) first by outputting `buf_tx` to the `TX` line.
+  - After each bit transmission, it right-shifts `buf_tx` to position the next bit.
+  - The counter `bits_sent` tracks how many bits have been transmitted.
 4. #### Stop Bit and Completion
-  - After all 8 data bits are sent, the TX line is pulled high again for the stop bit.
-  - The module then transitions to STATE\_TXDONE where it asserts the txdone signal.
+  - After all 8 data bits are sent, the `TX` line is pulled high again for the stop bit.
+  - The module then transitions to `STATE_TXDONE` where it asserts the `txdone` signal.
   - Finally, it returns to the idle state, ready for the next transmission.
 
 ### Timing Considerations
@@ -456,33 +472,36 @@ The Verilog source code for the UART Transmitter module can be found  via the fo
 
 The data path involves:
 
-  -  Parallel data (txbyte) is loaded into buf_tx register.
-- buf_tx is right-shifted during transmission, exposing each bit sequentially.
-- The current bit is placed on the tx output through the txbit register.
+-  Parallel data (txbyte) is loaded into `buf_tx` register.
+- `buf_tx` is right-shifted during transmission, exposing each bit sequentially.
+- The current bit is placed on the `tx` output through the txbit register.
 
 This implementation uses a simple but effective approach for UART transmission.
+
+
 </details>
 
 <details>
  <summary>Step 2: Design Documentation
 </summary>
-
+<br>
 
 <details>
   <summary> Block diagram detailing the UART transmitter module
 </summary>
-  
+  <br>
 ![Image](https://github.com/user-attachments/assets/5197a3fd-8bc5-4751-b6ff-52e2ebbbb8c7)
+
 ![Image](https://github.com/user-attachments/assets/aaf19a22-3e30-430e-a8f4-eb0c393673be)
 </details>
-
+<br>
 <details>
   <summary>Circuit diagram illustrating the FPGA's UART TX pin connection to the receiving device
 </summary>
  
  ![Image](https://github.com/user-attachments/assets/71ff7fa7-2c8d-49ef-af34-d36e5d2a8529)
 </details>
-
+<br>
 
 </details>
 
@@ -492,8 +511,8 @@ This implementation uses a simple but effective approach for UART transmission.
 <summary>Step 3: Implementation
 </summary>
 
+<br>
 
-    
 **Hardware Setup**
 
 - Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
@@ -528,15 +547,20 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <details>
 <summary>Step 4: Testing and Verification
 </summary>
-
+<br>
+  
 1. Install, and then open PuTTy.
-2. 2. Select the serial option and verify if the Speed(baud rate) is 9600.
+2.  Select the serial option and verify if the Speed(baud rate) is 9600.
       
 ![Image](https://github.com/user-attachments/assets/8fa480d7-784c-4b57-9f7d-45a50e9067e8)
 
 3. Verify that the correct port is connected through serial communication (COM 9 in my case).
 4. Then, check that a series of "K"s are generated and the RGB LED is blinking (switching between red, green and blue) .
+
+   <br>
+   
 <details>
+  
   <summary> Video demonstrating Task 3 </summary>
   
  https://github.com/user-attachments/assets/60675e20-6911-40c9-9351-cba4d7d272a7
@@ -544,10 +568,6 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 Task 3 is succesfully completed.
 </details>
-
-
-
-
 
 
 # Task 4: Implementing a UART Transmitter that Sends Data Based on Sensor Inputs
@@ -559,6 +579,8 @@ Implement a UART transmitter that sends data based on sensor inputs, enabling th
 <details>
 <summary> Step 1: Study the Existing Code</summary>
   
+  <br>
+  
 The Verilog source code for the Task 4 can be found  via the following repository: [Task 4](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Task4/top.v).
 
 
@@ -567,88 +589,93 @@ Overview of the Block Diagram
 The diagram illustrates a complete sensor data acquisition and UART transmission system with the following components:
 
 1. **Sensor Data Path**:
-   1. Sensor → Sensor Interface → Data Processing → Data Buffer
-   2. This path handles the acquisition and initial processing of sensor data
+   1. Sensor → Sensor Interface → Data Processing → Data Buffer.
+   2. This path handles the acquisition and initial processing of sensor data.
 2. **FPGA Processing Path**:
-   1. FPGA → Baud Rate Generator
-   2. Provides timing control for UART transmission
+   1. FPGA → Baud Rate Generator.
+   2. Provides timing control for UART transmission.
 3. **Transmission Path**:
-   1. Data Buffer (Stores Sensor Data) → TX Shift Register → UART TX Logic → UART Output
-   2. Handles the actual UART transmission process
+   1. Data Buffer (Stores Sensor Data) → TX Shift Register → UART TX Logic → UART Output.
+   2. Handles the actual UART transmission process.
 4. **Control Logic** 
-   1. State Machine (connected to UART TX Logic)
-   2. Manages the transmission sequence
+   1. State Machine (connected to UART TX Logic).
+   2. Manages the transmission sequence.
 
 Code Analysis: uart_tx_8n1 Module
 
-The provided uart_tx_8n1 module implements a basic 8N1 UART transmitter (8 data bits, No parity, 1 stop bit).
+The provided `uart_tx_8n1` module implements a basic 8N1 UART transmitter (8 data bits, No parity, 1 stop bit).
 
 **Key Components:**
 
 1. **Interface Signals**:
-   1. clk: Input clock (9600 Hz in the top module)
-   2. txbyte: 8-bit data to transmit
-   3. senddata: Trigger to start transmission
-   4. txdone: Output signal indicating transmission completion
-   5. tx: Serial UART output line
+   1. `clk`: Input clock (9600 Hz in the top module).
+   2. `txbyte`: 8-bit data to transmit.
+   3. `senddata`: Trigger to start transmission.
+   4. `txdone`: Output signal indicating transmission completion.
+   5. `tx`: Serial UART output line.
 2. **State Machine**:
-   1. STATE\_IDLE: Waiting for transmission request
-   2. STATE\_STARTTX: Sending start bit (logic low)
-   3. STATE\_TXING: Transmitting 8 data bits
-   4. STATE\_TXDONE: Sending stop bit and signaling completion
+   1. `STATE_IDLE`: Waiting for transmission request.
+   2. `STATE_STARTTX`: Sending start bit (logic low).
+   3. `STATE_TXING`: Transmitting 8 data bits.
+   4. `STATE_TXDONE`: Sending stop bit and signaling completion.
 3. **Internal Registers**:
-   1. state: Current state of the FSM
-   2. buf\_tx: Buffer holding the byte being transmitted
-   3. bits\_sent: Counter for transmitted bits
-   4. txbit: Current bit being transmitted
-   5. txdone: Transmission completion flag
+   1. `state`: Current state of the FSM.
+   2. `buf_tx`: Buffer holding the byte being transmitted.
+   3. `bits_sent`: Counter for transmitted bits.
+   4. `txbit`: Current bit being transmitted.
+   5. `txdone`: Transmission completion flag.
+
 
 **Operation Flow:**
 
 1. **Idle State**:
-   1. TX line is held high
-   2. Waits for senddata signal
+   1. `TX` line is held high.
+   2. Waits for senddata signal.
 2. **Start Bit**:
-   1. When senddata is asserted, transitions to STATE\_STARTTX
-   2. Outputs logic low (start bit)
+   1. When senddata is asserted, transitions to `STATE_STARTTX`.
+   2. Outputs logic low (start bit).
 3. **Data Bits**:
-   1. Shifts out 8 data bits from buf\_tx LSB first
-   2. Increments bits\_sent counter
+   1. Shifts out 8 data bits from `buf_tx` LSB first.
+   2. Increments `bits_sent` counter
 4. **Stop Bit**:
-   1. After 8 bits, outputs logic high (stop bit)
-   2. Transitions to STATE\_TXDONE
+   1. After 8 bits, outputs logic high (stop bit).
+   2. Transitions to `STATE_TXDONE`.
 5. **Completion**:
-  1. Asserts txdone signal
-  2. Returns to STATE\_IDLE
+   1. Asserts txdone signal.
+   2. Returns to `STATE_IDLE`.
 
 Top Module Analysis
 
-The top module integrates the UART transmitter with:
+The `top` module integrates the UART transmitter with:
 
 1. **Clock Generation**:
-   1. Uses internal high-frequency oscillator (SB\_HFOSC)
-   2. Divides down to generate 9600 Hz clock for UART
+   1. Uses internal high-frequency oscillator (`SB_HFOSC`).
+   2. Divides down to generate 9600 Hz clock for UART.
 2. **UART Implementation**:
-   1. Instantiates uart\_tx\_8n1 module
-   2. Configured to repeatedly transmit ASCII character 'D'
-   1. Transmission triggered by bit 24 of a counter (creates periodic transmission)
+   1. Instantiates `uart_tx_8n1` module.
+   2. Configured to repeatedly transmit ASCII character 'F'.
+   1. Transmission triggered by bit 24 of a counter (creates periodic transmission).
 3. **LED Control**:
-   1. Uses SB\_RGBA\_DRV primitive for RGB LED control
-   2. LED states tied to UART RX input (visual feedback)
+   1. Uses `SB_RGBA_DRV` primitive for RGB LED control.
+   2. LED states tied to UART RX input (visual feedback).
 
 
 </details>
 <details>
 <summary> Step 2: Design Documentation</summary>
-
+  
+<br>
+  
 <details>
 <summary>Block diagram depicting the integration of the sensor module with the UART transmitter.</summary>
-
 
 
 ![Image](https://github.com/user-attachments/assets/8ff5da4d-a1c4-454d-bd20-cdc99ebab02a)
 
 </details>
+
+<br>
+
 <details>
 <summary> Circuit diagram showing connections between the FPGA, sensor, and the receiving device.</summary>
 
@@ -657,6 +684,8 @@ The top module integrates the UART transmitter with:
 ![Image](https://github.com/user-attachments/assets/b0bfe8d6-d3c3-46b8-a4b9-f34df53333e5)
 
 </details>
+
+<br>
 </details>
 
 <details>
@@ -664,8 +693,8 @@ The top module integrates the UART transmitter with:
 <summary>Step 3: Implementation
 </summary>
 
+<br>
 
-    
 **Hardware Setup**
 
 - Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
@@ -700,6 +729,8 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 <details>
 <summary>Step 4: Testing and Verification
 </summary>
+  
+<br>
 
 1. Install, and then open PuTTy.
 2. Select the serial option and verify if the Speed(baud rate) is 9600.
@@ -708,12 +739,13 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 3. Verify that the correct port is connected through serial communication (COM 9 in my case).
 4. Then, check that a series of "F"s are generated .
+   <br>
 <details>
   <summary> Video demonstrating Task 4 </summary>
   
 https://github.com/user-attachments/assets/ad5c3fd9-f7f4-490b-a9a6-5d1dbd1042aa
 </details>
-
+<br>
 Task 4 is succesfully completed.
 </details>
 
@@ -728,6 +760,8 @@ Real-Time Sensor Data Acquisition and Transmission System: This theme focuses on
 <details>
 <summary>Step 1 : Project Description</summary>
 
+<br>
+
 This project implements an ultrasonic distance measurement system with UART output. It measures distance using an ultrasonic sensor (HC-SR04 or similar), converts the measurement to centimeters, and transmits the result to ESP8266(NodeMCU) via UART at 9600 baud. This project also provides visual feedback through RGB LEDs based on the measured distance.
 
 </details>
@@ -736,12 +770,13 @@ This project implements an ultrasonic distance measurement system with UART outp
 
 <summary> Step 2: Define System Requirements</summary>
 
+<br>
 
 **Hardware Components:**
 
 - VSDSquadron Fpga board.
-- HC-SR04 ultrasonic distance sensor
-- ESP8266 (NodeMCU) for wireless data transmission
+- HC-SR04 ultrasonic sensor.
+- ESP8266 (NodeMCU).
 - USB cable.
 - Connecting wires and breadboard.
 
@@ -756,10 +791,13 @@ This project implements an ultrasonic distance measurement system with UART outp
 </details>
 <details>
  <summary> Step 3: System Architecture</summary>
+  <br>
 <details>
  <summary> Block Diagram </summary>
 ![Image](https://github.com/user-attachments/assets/ac43e17e-b2a7-42bc-9c29-84b02d059f15) 
 </details>
+  <br>
+  
 The system consists of four primary functional blocks:
 
 1. **Sensor Interface Module**
@@ -793,43 +831,45 @@ The system consists of four primary functional blocks:
 <details>
 <summary> Step 4: Project Implementation Plan</summary>
 
+<br>
+
 **Phase 1: System Setup and Component Testing**
 
-- Configure FPGA development environment
-- Test HC-SR04 sensor functionality
-- Verify ESP8266 communication capabilities
-- Implement and test RGB LED driver
+- Configure FPGA development environment.
+- Test HC-SR04 sensor functionality.
+- Verify ESP8266 communication capabilities.
+- Implement and test RGB LED driver.
 
 **Phase 2: FPGA Module Development**
 
 - Develop ultrasonic sensor interface module
-  - Implement trigger pulse generation (10μs)
-  - Create echo pulse measurement system
-  - Add 250ms cooldown period between measurements
+  - Implement trigger pulse generation (10μs).
+  - Create echo pulse measurement system.
+  - Add 250ms cooldown period between measurements.
 
 **Phase 3: Communication System Implementation**
 
-- Develop UART transmitter module
-- Configure ESP8266 for data reception
+- Develop UART transmitter module.
+- Configure ESP8266 for data reception.
   
 
 **Phase 4: Integration and Testing (2 weeks)**
 
-- Combine all FPGA modules into complete system
-- Integrate ESP8266 with FPGA via UART
-- Implement RGB LED feedback based on distance thresholds
+- Combine all FPGA modules into complete system.
+- Integrate ESP8266 with FPGA via UART.
+- Implement RGB LED feedback based on distance thresholds.
 - Conduct comprehensive system testing
-  - Verify measurement accuracy at various distances
-  - Test communication reliability
-  - Validate visual feedback functionality
+  - Verify measurement accuracy at various distances.
+  - Test communication reliability.
+  - Validate visual feedback functionality.
 
 
 Expected Outcomes
 
 The completed system will provide:
 
-- Real-time distance measurements using the HC-SR04 ultrasonic sensor
-- Reliable UART data transmission to the ESP8266
+- Real-time distance measurements using the HC-SR04 ultrasonic sensor.
+- Reliable UART data transmission to the ESP8266.
 - Visual feedback through RGB LEDs based on measured distance.
 
 
@@ -849,6 +889,7 @@ Execute the project plan by developing, testing, and validating the system.​
 <details>
 <summary>Step 1 : Developing FPGA Modules</summary>
 
+<br>
 
 The project is implemented using several interconnected Verilog modules, each handling specific functionality. Here's a detailed explanation of each module:
 
@@ -857,56 +898,56 @@ The project is implemented using several interconnected Verilog modules, each ha
 The `ultrasonic` module manages the HC-SR04 ultrasonic distance sensor interface:
 
 - **Parameters**:
-  - `TRIGGER_CYCLES`: Controls the trigger pulse duration (set to 60 cycles)
-  - `MAX_ECHO_CYCLES`: Prevents system hanging if echo never returns (24-bit max value)
-  - `COOLDOWN_CYCLES`: Ensures proper timing between measurements (12,000 cycles or 250ms at 12MHz)
+  - `TRIGGER_CYCLES`: Controls the trigger pulse duration (set to 60 cycles).
+  - `MAX_ECHO_CYCLES`: Prevents system hanging if echo never returns (24-bit max value). 
+  - `COOLDOWN_CYCLES`: Ensures proper timing between measurements (12,000 cycles or 250ms at 12MHz).
 - **Functionality**: Implements a 4-state FSM that:
-  - Initializes counters in idle state
-  - Generates a trigger pulse to the sensor
-  - Measures the echo pulse width by counting clock cycles
-  - Enforces a cooldown period before starting the next measurement
+  - Initializes counters in idle state.
+  - Generates a trigger pulse to the sensor.
+  - Measures the echo pulse width by counting clock cycles.
+  - Enforces a cooldown period before starting the next measurement.
 
-- The module outputs pulse\_width, which represents the echo duration in clock cycles1.
+- The module outputs `pulse_width`, which represents the echo duration in clock cycles.
 
 #### Distance Calculation
 
 The `distance_calc` module converts echo pulse duration to distance:
 
 - **Parameters**:
-  - `CLK_PER_CM`: Calibration constant (348 clock cycles per centimeter)
-- **Functionality**: Divides the echo pulse width by the calibration constant to calculate distance in centimeters1.
+  - `CLK_PER_CM`: Calibration constant (348 clock cycles per centimeter).
+- **Functionality**: Divides the echo pulse width by the calibration constant to calculate distance in centimeters.
 
 #### BCD Converter
 
 The `bcd_converter` module converts binary distance values to decimal digits:
 
-- **Inputs**: 16-bit binary distance value
-- **Outputs**: Three 4-bit BCD values for hundreds, tens, and units digits
-- **Functionality**: Performs integer division and modulo operations to extract individual decimal digits from the binary distance value1.
+- **Inputs**: 16-bit binary distance value.
+- **Outputs**: Three 4-bit BCD values for hundreds, tens, and units digits,
+- **Functionality**: Performs integer division and modulo operations to extract individual decimal digits from the binary distance value.
 
 #### UART Transmission
 
 The `uart_tx_8n1` module (included but not shown in detail) handles serial communication:
 
-- **Functionality**: Transmits 8-bit data with no parity and 1 stop bit over UART protocol
+- **Functionality**: Transmits 8-bit data with no parity and 1 stop bit over UART protocol.
 
 Top Module Integration
 
-The top module integrates all components:
+The `top` module integrates all components:
 
-- **Clock Generation**: Uses the internal oscillator (SB\_HFOSC) configured to generate the system clock
-- **Measurement System**: Instantiates the ultrasonic sensor interface and distance calculation modules
-- **Data Processing**: Uses the BCD converter to prepare distance values for transmission
+- **Clock Generation**: Uses the internal oscillator (SB\_HFOSC) configured to generate the system clock.
+- **Measurement System**: Instantiates the ultrasonic sensor interface and distance calculation modules.
+- **Data Processing**: Uses the BCD converter to prepare distance values for transmission.
 - **UART Control**: Implements a 5-state FSM to transmit distance readings serially:
-  - Waits for 1 second between transmissions
-  - Sends hundreds digit
-  - Sends tens digit
-  - Sends units digit
-  - Sends newline character
+  - Waits for 1 second between transmissions.
+  - Sends hundreds digit.
+  - Sends tens digit.
+  - Sends units digit.
+  - Sends newline character.
 - **LED Feedback**: Uses the RGB LED to provide visual distance feedback:
-  - Red LED: Distance ≤ 50cm
-  - Green LED: Distance between 50cm and 100cm
-  - Blue LED: Distance > 100cm1
+  - Red LED: Distance ≤ 50cm.
+  - Green LED: Distance between 50cm and 100cm.
+  - Blue LED: Distance > 100cm.
 
 The system continuously measures distance, converts it to human-readable format, transmits it via UART, and provides visual feedback through the RGB LED.
 
@@ -918,13 +959,35 @@ The system continuously measures distance, converts it to human-readable format,
 
 <summary> Step 2: Simulation </summary>
 
+<br>
+
 I have used Icarus Verilog + Gtkwave to simulate the modules but if you have any other tools like Xilinx vivado/ISE, modelsim etc. you can use them.
 Here is the installation for [Icarus verilog in windows.](https://www.youtube.com/watch?v=FqIhFxf9kFM)
+
+```verilog
+   always @(posedge clk_9600) begin
+    case(uart_state)
+        0: begin  // Wait 1 second
+            send_uart <= 0;      // Ensure send signal is low
+            if(timer == 12) begin   // 9600 cycles of 9600 Hz clock = 1 second
+                timer <= 0;
+                uart_state <= 1; // Move to sending hundreds digit
+            end
+            else timer <= timer + 1;
+        end
+         ....
+    endcase
+end
+```
+- For simulation purposes, I reduced the wait period in the UART transmission FSM by changing `timer == 9600` to `timer == 12`.
+- This modification significantly decreases the memory requirements of the testbench while maintaining the same functional behavior.
+- In the actual implementation, the timer would count to 9600 (representing a 1-second delay between transmissions), but for simulation purposes, the shorter count of 12 allows us to verify the system's operation without consuming excessive computational resources.
+
 
 
 #### Simulation Results
 
-- The GTKWave simulation shows the UART transmission of distance data. 
+- In the below image, the GTKWave simulation shows the UART transmission of distance data. 
 - The distance_cm[15:0] signal shows a value of 0000, representing 0 centimeters. 
 -  The system is transmitting this value over UART, where we can see tx_data[7:0] carrying the ASCII value "30" (hexadecimal representation of ASCII character '0'). 
 - The UART transmission can be observed on the uarttx signal, which shows the serial bit pattern for transmitting the ASCII character '0' followed later by "0A" (the ASCII newline character).
@@ -935,7 +998,6 @@ Here is the installation for [Icarus verilog in windows.](https://www.youtube.co
 In the below  image :
 
 - The distance_cm[15:0] value has changed to "00EA" (234 centimeters)
-
 - The system is transmitting the digits sequentially:
 
     - "32" (ASCII for '2')
@@ -945,11 +1007,8 @@ In the below  image :
     - "34" (ASCII for '4')
 
     - "0A" (newline)
-
 - Beginning to transmit "32" again for the next cycle.
-
 - The uarttx signal shows the serial transmission of each character.
-
 - The bits_sent[3:0] counter cycles through 0-9 for each character transmitted.
 
 ![Image](https://github.com/user-attachments/assets/3d81bdd8-133e-4b2c-a298-34ba999ea98c)
@@ -957,7 +1016,6 @@ In the below  image :
 - In the below image :
 
 - The distance_cm[15:0] value has increased to "0190" (400 in decimal)
-
 - The tx_data[7:0] signal shows the transmission sequence:
 
     - "34" (ASCII for '4')
@@ -965,10 +1023,7 @@ In the below  image :
     - "30" (ASCII for '0')
 
     - "0A" (newline)
-
-
 - The uarttx signal continues to show the serial bit patterns
-
 - The bits_sent[3:0] counter maintains its pattern of cycling through 0-9 for each character.
 
 ![Image](https://github.com/user-attachments/assets/9ac664f0-1cd9-48e9-be51-947b6191ff9e)
@@ -976,11 +1031,20 @@ In the below  image :
 </details>
 
 <details>
+
+<br>
+
+  
  <summary> Step 3: Testing with Hardware</summary>
 <details>
+  
+  
 <summary> Testing with Serial Termianl</summary>
 
+<br>
+
 1. **Hardware Setup**
+
 
 - Refer to the [VSDSquadron FPGA Mini Datasheet](https://www.vlsisystemdesign.com/wp-content/uploads/2025/01/VSDSquadronFMDatasheet.pdf)
  for board details and pinout specifications.
@@ -991,6 +1055,7 @@ In the below  image :
 - Connect ECHO (Pin 3)→ HC-SR04 ECHO.
 - Connect 5 V to sensor VCC, common GND.
 - Connect FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+
 **Compilation and Flashing Workflow**
 
 A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
@@ -1015,9 +1080,7 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 3. **Measuring Distance**:
 
    - Place an object ~10 cm away from the sensor.
-
    - Terminal should display a reading around “0010” .
-
    - Move the object closer or farther to see changing values.
 
 ***
@@ -1026,7 +1089,9 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 <details>
 <summary> Testing with ESP8266</summary>
-
+  
+<br>
+  
 Change the `set_io uarttx` from  14 to  10 to send the signals via pin 10 in the [VSDSquadronFM.pcf](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
 
 1. **Hardware Setup**
@@ -1040,6 +1105,7 @@ Change the `set_io uarttx` from  14 to  10 to send the signals via pin 10 in the
 - Connect ECHO (Pin 3)→ HC-SR04 ECHO.
 - Connect 5 V to sensor VCC, common GND.
 - Connect FPGA’s UARTTX (Pin 14) → USB–Serial RX.
+  
 **Compilation and Flashing Workflow**
 
 A Makefile is used for compilation and flashing of the Verilog design. The repository link is: [Makefile](https://github.com/KARthiKReddY563/VSDSquadron_FPGA_mini/blob/main/Taks5%266/Makefile).
@@ -1078,8 +1144,12 @@ sudo make flash # Upload the synthesized bitstream to the FPGA
 
 <summary> Step 4: Verification 
 </summary>
-<details>
+<br>
 
+<details>
+  
+
+  
 <summary> Video Demonstration (Termianl) 
 </summary>
   
@@ -1087,12 +1157,16 @@ https://github.com/user-attachments/assets/1f4dcc04-079d-4188-898a-41927fe4b1a6
 </details>
 <details>
 
+<br>
 
 <summary> Video Demonstration (ESP8266)  
 </summary>
 
 https://github.com/user-attachments/assets/8b9ddb23-0b96-4498-a1b3-6e93c07f0cc5
 </details>
+
+<br>
+
 </details>
 
 
